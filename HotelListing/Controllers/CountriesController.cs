@@ -27,7 +27,7 @@ namespace HotelListing.API.Controllers
 
         // GET: api/Countries
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
+        public async Task<ActionResult<IEnumerable<GetCountryDto>>> GetCountries()
         {
           if (_context.Countries == null)
           {
@@ -35,6 +35,7 @@ namespace HotelListing.API.Controllers
           }
             //Select * from Countries
             var countries = await _context.Countries.ToListAsync();
+            var records = _mapper.Map<List<GetCountryDto>>(countries);
                 return Ok(countries);
             //return await _context.Countries.ToListAsync();
             //return Ok( await _context.Countries.ToListAsync());
@@ -48,12 +49,15 @@ namespace HotelListing.API.Controllers
           {
               return NotFound();
           }
-            var country = await _context.Countries.FindAsync(id);
+            var country = await _context.Countries.Include(q =>q.Hotels)
+                .FirstOrDefaultAsync(q => q.Id ==id);
 
             if (country == null)
             {
                 return NotFound();
             }
+
+            var countryDto = _mapper.Map<CountryDto>(country);
 
             return country;
         }
