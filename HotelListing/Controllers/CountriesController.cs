@@ -36,14 +36,14 @@ namespace HotelListing.API.Controllers
             //Select * from Countries
             var countries = await _context.Countries.ToListAsync();
             var records = _mapper.Map<List<GetCountryDto>>(countries);
-                return Ok(countries);
+                return Ok(records);
             //return await _context.Countries.ToListAsync();
             //return Ok( await _context.Countries.ToListAsync());
         }
 
         // GET: api/Countries/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Country>> GetCountry(int id)
+        public async Task<ActionResult<CountryDto>> GetCountry(int id)
         {
           if (_context.Countries == null)
           {
